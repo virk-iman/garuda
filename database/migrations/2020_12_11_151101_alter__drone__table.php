@@ -20,6 +20,7 @@ class AlterDroneTable extends Migration
             $table->string('recovery')->default('No');
             $table->string('forensics')->default('No');            
             $table->string('bop')->after('ps')->nullable();
+            $table->string('vill')->after('bop')->nullable();
         });
     }
 
@@ -35,8 +36,9 @@ class AlterDroneTable extends Migration
             $table->dropColumn('recovery');
             $table->dropColumn('forensics');
             $table->dropColumn('bop');
-             $table->dropColumn('updated_at');
-              $table->dropColumn('created_at');
+            $table->dropColumn('vill');
+            $table->dropColumn('updated_at');
+             $table->dropColumn('created_at');
               
         });
     }

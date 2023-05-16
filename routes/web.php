@@ -31,6 +31,10 @@ Route::resource('drones', 'DroneController');
 
 Route::view('/submit', 'insert_data');
 
+Route::get('insert_bop', 'DroneController@Insert_bop')->name('drones.insert_bop');
+
+Route::get('submit_bop', 'DroneController@Submit_bop')->name('drones.submit_bop');
+
 Route::get('drone_map', 'DroneController@DroneMap')->name('drones.drone_map');
 
 Route::get('get-category-data', 'DroneController@categoryData')->name('datatables.category');

@@ -50,7 +50,7 @@ background: linear-gradient(to right, #ffe94a, #55c138);
     <div id="app">
         <nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background-color:black;" >
             <div class="container-fluid">
-                <a class="navbar-brand ml-auto" href="{{ url('/') }}">
+                <a class="navbar-brand ml-auto" href="#">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -92,9 +92,12 @@ background: linear-gradient(to right, #ffe94a, #55c138);
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                @if(Auth::user()->name == 'iman')
+                                @if(Auth::user()->name == 'iman' or Auth::user()->name == 'nevia') 
                                 <a class="dropdown-item" href="{{ route('register') }}">
                                         {{ __('Register') }}
+                                    </a>
+                                     <a class="dropdown-item" href="{{ route('drones.insert_bop') }}">
+                                        {{ __('Add BOP') }}
                                     </a>
                                     @endif
                                     <a class="dropdown-item" href="{{ route('logout') }}"

@@ -21,24 +21,8 @@
         <!--single form panel-->
         <div class="multisteps-form__panel shadow p-4 rounded bg-white js-active" data-animation="scaleIn">
           <div class="multisteps-form__content">
-          <div class="form-row">
-  <div class="form-group col-md-4">
-    <label for="uav_type">UAV/Drone Type</label> 
-    <div>
-      <select id="uav_type" name="uav_type" class="custom-select">
-        <option value="">Select  Type</option>
-      </select>
-    </div>
-  </div>
-  </div>
-  <div class="form-row">
-  <div class="form-group col-md-4">
+        
   
-    <label for="location">Location of sight</label>
-     
-    <input id="location" name="location" type="text" class="form-control" value="{{ $drone->location }}">
-    </div>
-  </div>
   <div class="form-row">
   <div class="form-group col-md-4">
     <label for="district">District</label> 
@@ -56,6 +40,30 @@
       </select>
     </div>
   </div>
+  </div>
+  <div class="form-row">
+  <div class="form-group col-md-4">
+    <label for="bop_rec">BOP</label> 
+    <div>
+      <select id="bop_rec" name="bop_rec" class="custom-select">
+        <option value="">Select BOP</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group col-md-4">
+    <label for="vill">Village</label> 
+    <div>
+      <input id="vill" name="vill" type="text" class="form-control" value="{{ $drone->vill }}">
+    </div>
+  </div>
+  </div>
+  <div class="form-row">
+  <div class="form-group col-md-4">
+  
+    <label for="location">Location of sight</label>
+     
+    <input id="location" name="location" type="text" class="form-control" value="{{ $drone->location }}">
+    </div>
   </div>
   <div class="form-row">
   <div class="form-group col-md-4">
@@ -91,11 +99,18 @@
 </div>
 <?php
  $fly_dur=$drone->fly_dur;
+ if($fly_dur!='')
+ {
  $split_fly=explode(":",$fly_dur);
  $hrs=$split_fly[0];
  $min=$split_fly[1];
  $sec=$split_fly[2];
-
+}
+else{
+  $hrs='';
+ $min='';
+ $sec='';
+}
  $pen_dist=$drone->pen_dist;
  if($pos=strpos($pen_dist,"k"))
  { 
@@ -113,6 +128,7 @@ $dispen_unit = substr($pen_dist, $pos);
     $dis_pen = $pen_dist;
     $dispen_unit= '';
  }
+
 ?>
   <div class="form-row">
     <label>Duration of flying within Indian territory</label> 
@@ -136,11 +152,256 @@ $dispen_unit = substr($pen_dist, $pos);
     <select name="unit_dis" id="unit_dis" class="form-control"><option value="">unit</option><option value="km">km</option><option value="m">m</option></select>
   </div>
   </div>
-  
-  <div class="form-group">
+  <div style="display:none" class="form-group">
     <label for="textarea">Action Taken</label> 
-    <textarea id="textarea" name="action" cols="40" rows="5" class="form-control">{{ $drone->action }}</textarea>
+    <textarea id="textarea" name="action" cols="40" rows="5" class="form-control"></textarea>
   </div> 
+  <br>
+  <div class="form-row">
+  <div class="form-group col-md-2">
+    <label for="fir_no">FIR No.</label> 
+   <div>
+      <input id="fir_no" name="fir_no" type="text" class="form-control">
+    </div>
+  </div>
+
+  <div class="form-group col-md-2">
+    <label for="fir_date">FIR Date</label> 
+    <div>
+       <input id="fir_date" name="fir_date" type="date" class="form-control">
+    </div>
+  </div>
+
+   <div class="form-group col-md-2">
+    <label for="under_sec">U/S</label> 
+    <div>
+       <input id="under_sec" name="under_sec" type="text" class="form-control">
+    </div>
+  </div>
+
+  <div class="form-group col-md-2">
+    <label for="fir_act">Act</label> 
+    <div>
+       <input id="fir_act" name="fir_act" type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-group col-md-2">
+    <label for="fir_ps">PS</label> 
+    <div>
+       <input id="fir_ps" name="fir_ps" type="text" class="form-control">
+    </div>
+  </div>
+</div>
+<br>
+  <div class="form-row">
+  <label for="cons_dropped">Consignment Dropped</label>
+      <div class="col-md-6">  
+ <div class="form-check form-check-inline">
+   <input class="form-check-input" type="radio" name="cons_dropped" value="Yes">
+   <label class="form-check-label">
+   Yes
+   </label>
+</div>
+<div class="form-check form-check-inline">
+   <input class="form-check-input" type="radio" name="cons_dropped" value="No" checked>
+   <label class="form-check-label">
+   No
+   </label>
+</div>
+  </div>
+</div>
+<br>
+<div id="cons_container" style="display:none">
+
+  <div class="form-row">
+  <div class="form-group col-md-4">
+  
+    <label for="indian_vill">Consignment Type</label>
+    <div class="input-group mb-3">
+   <select id="cons_type" name="cons_type[]" class="custom-select">
+        <option value="">Select Type</option>
+      </select>
+    </div>
+    </div>
+    
+  <div class="form-group col-md-2">
+  
+    <label for="cons_item">Item</label> 
+    <div>
+    <select id="cons_item" name="cons_item[]" class="custom-select">
+      <option value="">Select Item</option>
+    </select>
+  </div>
+    </div>
+  <div class="form-group col-md-2">
+  
+    <label for="cons_qty">Quantity</label> 
+    <div class="input-group mb-3">
+    <input name="cons_qty[]" type="number" class="form-control">
+    <div class="input-group-append">
+    <button type="button" id="cons_add" class="btn btn-primary">Add</button>
+    </div>
+    </div>
+  </div>
+  </div>
+    <div class="drone_cons-wrap">
+      @foreach ($consignments as $cons)
+      <div class="form-row">
+    <input name="cons_dron_id[]" type="hidden" class="form-control" value="{{ $cons->id }}">
+    <div class="col-md-3">
+    <input name="cons_dron_type[]" type="text" class="form-control" value="{{ $cons->type }}">
+  </div>
+  <div class="col-md-3">
+    <input name="cons_dron_item[]" type="text" class="form-control" value="{{ $cons->item }}">
+  </div>
+    <div class="col-md-2">
+    <input name="cons_dron_qty[]" type="text" class="form-control" value="{{ $cons->qty }}">
+  </div>
+  </div>
+    @endforeach
+      </div>
+  </div>
+
+ <div class="form-row">
+  <label for="rec_radio">Drone Recovery</label>
+      <div class="col-md-6">  
+ <div class="form-check form-check-inline">
+   <input class="form-check-input" type="radio" name="rec_radio" value="Yes">
+   <label class="form-check-label">
+   Yes
+   </label>
+</div>
+<div class="form-check form-check-inline">
+   <input class="form-check-input" type="radio" name="rec_radio" value="No" checked>
+   <label class="form-check-label">
+   No
+   </label>
+</div>
+  </div>
+</div>
+<br>
+<div id="recovery_made" style="display:none;">
+<div class="form-row">
+  <div class="form-group col-md-2">
+    <label for="date_rec">Date of Recovery</label> 
+    <div>
+       <input id="date_rec" name="date_rec" type="date" class="form-control">
+    </div>
+  </div>
+
+
+   <div class="form-group col-md-3">
+    <label for="agency_rec">Recovery Agency</label> 
+   <div>
+      <select id="agency_rec" name="agency_rec" class="custom-select">
+        <option value="">Select Agency</option>
+        <option value="NCB">NCB</option>
+        <option value="BSF">BSF</option>
+        <option value="Punjab Police">Punjab Police</option>
+      </select>
+    </div>
+  </div>
+  </div>
+
+<div class="form-row">
+  <div class="form-group col-md-3">
+    <label for="type_drone">Type of Drone</label> 
+   <div>
+      <select id="type_drone" name="type_drone" class="custom-select">
+        <option value="">Select Drone Type</option>
+        <option value="Hexa">Hexa</option>
+        <option value="Quad">Quad</option>
+        <option value="Tetra">Tetra</option>
+      </select>
+    </div>
+  </div>
+
+   <div class="form-group col-md-3">
+    <label for="model_drone">Model</label> 
+   <div>
+      <select id="model_drone" name="model_drone" class="custom-select">
+        <option value="">Select Drone Model</option>
+        <option value="DJI Inspire 2">DJI Inspire 2</option>
+        <option value="DJI Matrice 600 Pro">DJI Matrice 600 Pro</option>
+        <option value="DJI Phantom 4 Pro">DJI Phantom 4 Pro</option>
+        <option value="DJI Phantom 4">DJI Phantom 4</option>
+      </select>
+    </div>
+  </div>
+  </div>
+
+ 
+
+<br>
+ <div class="form-row">
+  <label for="forensic_radio">Drone Forensics Done</label>
+      <div class="col-md-6">  
+ <div class="form-check form-check-inline">
+   <input class="form-check-input" type="radio" name="forensic_radio" value="Yes">
+   <label class="form-check-label">
+   Yes
+   </label>
+</div>
+<div class="form-check form-check-inline">
+   <input class="form-check-input" type="radio" name="forensic_radio" value="No" checked>
+   <label class="form-check-label">
+   No
+   </label>
+</div>
+  </div>
+</div>
+<br>
+<div id="forensic_container" style="display:none">
+<div class="form-row">
+  <label for="payload">Payload Capacity</label> 
+  <div class="col-sm-2">
+    <input id="payload" name="payload" type="text" class="form-control">
+  </div>
+ 
+  </div>
+<br>
+<div class="form-row">
+  <label for="max_speed">Maximum Speed</label> 
+  <div class="col-sm-2">
+    <input id="max_speed" name="max_speed" type="text" class="form-control">
+  </div>
+  
+  </div>
+<br>
+<div class="form-row">
+  <label for="flight_time">Flight Time</label> 
+  <div class="col-sm-2">
+    <input id="flight_time" name="flight_time" type="text" class="form-control">
+  </div>
+  
+  </div>
+  <br>
+<div class="form-row">
+  <label for="onewaydis">One Way Distance</label> 
+  <div class="col-sm-2">
+    <input id="onewaydis" name="onewaydis" type="text" class="form-control">
+  </div>
+  
+  </div>
+ @if(!$recovery->isEmpty()) 
+  <script>
+
+  $("#date_rec").val("{{$recovery[0]->dor}}");
+  $("#agency_rec").val("{{$recovery[0]->rec_agency}}");
+  $("#type_drone").val("{{$recovery[0]->type_drone}}");
+  $("#model_drone").val("{{$recovery[0]->model}}");
+  $("#payload").val("{{$recovery[0]->payload_cap}}");
+  $("#max_speed").val("{{$recovery[0]->max_speed}}");
+  $("#flight_time").val("{{$recovery[0]->flight_time}}");
+  $("#onewaydis").val("{{$recovery[0]->one_way}}");
+  </script>
+  @else
+
+  @endif
+  <br>
+  </div>
+</div>
+ 
   
           </div>
         </div>
@@ -298,6 +559,77 @@ $dispen_unit = substr($pen_dist, $pos);
     </div>
     @endforeach
       </div>
+      <h4><strong>Persons Arrested near Drone Location</strong></h4>
+      <div class="form-row">
+  <div class="form-group col-md-2">
+  
+    <label for="perarr_name">Name</label>
+    <div class="input-group mb-3">
+    <input name="perarr_name[]" type="text" class="form-control" placeholder="Name">
+    </div>
+    </div>
+    
+  <div class="form-group col-md-2">
+  
+    <label for="perarr_so">S/O</label>
+    <div class="input-group mb-3">
+    <input name="perarr_so[]" type="text" class="form-control">
+    </div>
+    </div>
+  
+    <div class="form-group col-md-3">
+  
+  <label for="perarr_ro">R/O</label>
+  <div class="input-group mb-3">
+  <input name="perarr_ro[]" type="text" class="form-control">
+  </div>
+  
+  </div>
+
+     <div class="form-group col-md-2">
+<label for="perarr_dis">District</label> 
+    <div>
+      <select name="perarr_dis[]" class="custom-select">
+        <option value="">Select District</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group col-md-2">
+  
+  <label for="perarr_age">Age</label>
+  <div class="input-group mb-2">
+  <input name="perarr_age[]" type="number" class="form-control">
+  <div class="input-group-append">
+    <button type="button" id="perarrb" class="btn btn-primary">Add</button>
+    </div>
+  </div>
+  
+  </div>
+  </div>
+  
+  </div>
+    <div class="perarr-wrap">
+      @foreach ($arrest_per as $arr_per)
+    <div class="form-row">
+    <input name="per_arr_id[]" type="hidden" class="form-control" value="{{ $arr_per->id }}">
+    <div class="col-md-2">
+    <input name="per_arr[]" type="text" class="form-control" value="{{ $arr_per->name }}">
+    </div>
+    <div class="col-md-2">
+    <input name="per_arr_so[]" type="text" class="form-control" value="{{ $arr_per->father }}">
+    </div>
+    <div class="col-md-3">
+    <input name="per_arr_ro[]" type="text" class="form-control" value="{{ $arr_per->address }}">
+    </div>
+     <div class="col-md-2">
+    <input name="per_arr_dis[]" type="text" class="form-control" value="{{ $arr_per->district }}">
+    </div>
+    <div class="col-md-2">
+    <input name="per_arr_age[]" type="text" class="form-control" value="{{ $arr_per->age }}">
+    </div>
+    </div>
+    @endforeach
+      </div>
 <h4><strong>Indian Suspects near Drone Location</strong></h4>
       <div class="form-row">
   <div class="form-group col-md-2">
@@ -402,64 +734,131 @@ $dispen_unit = substr($pen_dist, $pos);
 @section('scripts')
 <script>
 $( document ).ready(function() {
+
+
+  $("input[name='forensic_radio']").click(function() {
+        var test = $(this).val();
+        if(test=='Yes'){
+            $("#forensic_container").show();
+        }
+        else{
+            $("#forensic_container").hide();
+        }
   
+    });
+   $("input[name='rec_radio']").click(function() {
+        var test = $(this).val();
+        if(test=='Yes'){
+            $("#recovery_made").show();
+        }
+        else{
+            $("#recovery_made").hide();
+        }
+  
+    });
+   $("input[name='cons_dropped']").click(function() {
+        var test = $(this).val();
+        if(test=='Yes'){
+            $("#cons_container").show();
+        }
+        else{
+            $("#cons_container").hide();
+        }
+  
+    });
+   if("{{$drone->cons_dropped}}"=="Yes"){
+   $("input[name='cons_dropped'][value='Yes']").prop("checked", true).trigger("click");
+ }
+ if("{{$drone->recovery}}"=="Yes"){
+  
+    $("input[name='rec_radio'][value='Yes']").prop("checked", true).trigger("click");
+  }
+  if("{{$drone->forensics}}"=="Yes"){
+    $("input[name='forensic_radio'][value='Yes']").prop("checked", true).trigger("click");
+  }
   var msg = '{{Session::get('status')}}';
   var exist = '{{Session::has('status')}}';
   if(exist){
     alert(msg);
   }
  var drone_types = ["Single-Rotor Drones","Multi-Rotor Drones","Fixed-Wing Drones","Fixed-Wing Hybrid Drones","Small Drones","Micro Drones","Tactical Drones","Reconnaissance Drones","Large Combat Drones","Non-Combat Large Drones","Target and Decoy Drones","GPS Drones","Photography Drones","Racing Drones"];
- var drone_opt="<option value=''>Select Type</option>";
- for(drone_type of drone_types)
- {
-  drone_opt+= "<option value='"+drone_type+"'>"+ drone_type + "</option>";
- }
- $("#uav_type").html(drone_opt);
- 
-  var distArr = {
-                    "Amritsar-City" : ["PS Div. A","PS Div. B","PS Div. C","PS Div. D","PS Div. E","PS Civil Lines","PS Sadar","PS Islamabad","PS Chheharta","PS Sultanwind","PS Gate Hakiman","PS Cantonment","PS Maqboolpura","PS Women","PS NRI","PS Airport","PS Verka","PS Majitha Road","PS Mohkampura","PS Ranjit Avenue","PS State Spl. Operation Cell"],
-                    "Amritsar-Rural" : ["PS Ajnala","PS Beas","PS Bhindi Saidan","PS Chattiwind","PS Gharinda","PS Jandiala","PS Jhander","PS Kambo","PS Kathunangal","PS Khilchian","PS Lopoke","PS Majitha","PS Mattewal","PS Mehta","PS Rajasansi","PS Ramdas","PS Tarsikka"],
-                    "Fazilka" : ["PS Sadar","PS City","PS City Jalalabad","PS Sadar Abohar","PS City-1 Abohar","PS City-2 Abohar","PS Bahav Wala","PS Sadar Jalalabad","PS Arni Wala","PS Khuian Sarwar","PS Khui Khera","PS Vario"],
-                    "Ferozepur" : ["PS City","PS Sadar","PS Cantt.","PS Makhu","PS Zira","PS Zira City","PS Mallanwala","PS Kulgari","PS Ghall Khurad","PS Mamdot","PS Guru Har Sahai","PS Lakhoke Behram","PS Amir Khas","PS Women Cell","PS Talwandi Bhai","PS Arif Ke","PS NRI"],
-                    "Gurdaspur": ["PS City","PS Sadar","PS Dhariwal","PS Kahnuwan","PS Purana Shalla","PS Dorangla","PS Dinanagar","PS Kalanaur","PS Tibber","PS Ghuman Kalan","PS Bhaini Mian Khan","PS Behrampur","PS NRI"],
-                    "Jalandhar-Rural": ["PS Adampur","PS Bhogpur","PS Lambra","PS Kartarpur","PS Maqsudan","PS Nakodar","PS City Nakodar","PS Mehatpur","PS Shahkot","PS Lohian","PS Phillaur","PS Bilga","PS Nurmahal","PS Goraya","PS Patara","PS NRI"],
-                    "Kapurthala": ["PS City","PS Kotwali","PS Sadar","PS Sultanpur Lodhi","PS Talwandi Choudhrian","PS Bholath","PS Dhilwan","PS Subhanpur","PS City Phagwara","PS Sadar Phagwara","PS Kabirpur","PS Begowal","PS Rawalpindi","PS Fattudhinga","PS Satnampura","PS NRI"],
-                    "Pathankot": ["PS Div.No.1","PS Div.No.2","PS Sadar","PS Shahpur Kandi","PS Sujanpur","PS Nangal Bhoor","PS Taragarh","PS Narot Jaimal Singh","PS Dhar Kalan"],
 
-  };
-  var distopt="<option value=''>Select District</option>";
-                for(var key in distArr){
+ var bops="{{$Bops}}";
+var bopArr=JSON.parse(bops.replace(/&quot;/g,'"'));
+  
+   var distopt="<option value=''>Select District</option>";
+                for(var key in bopArr){
                   distopt+= "<option value='"+key+"'>"+ key + "</option>";
                 }
                 $("#district").html(distopt);
-                $("#district").change(function(){
+               $("#district").change(function(){
         var selectedDistrict = $("#district option:selected").val();
         var psopt="<option value=''>Select PS</option>";
         if(selectedDistrict !== ''){
-        for(var value of distArr[selectedDistrict]){
+          dict_ps = bopArr[selectedDistrict];
+         // console.log(dict_ps);
+        for(var value in dict_ps){
             psopt+="<option value='"+value+"'>"+ value + "</option>";
         }
+        //console.log(psopt);
         $("#ps").html(psopt);
     } 
+ 
     });
     // Display city dropdown based on country name
-    
+    $("#ps").change(function(){
+    var selectedPS = $("#ps option:selected").val();
+    var bopopt="<option value=''>Select BOP</option>";
+    if(selectedPS !== ''){
+          //dict_ps = dict_ps[selectedPS];
+         //console.log(dict_ps[selectedPS]);
+        for(var value of dict_ps[selectedPS]){
+            bopopt+="<option value='"+value+"'>"+ value+ "</option>";
+        }
+        //console.log(psopt);
+        $("#bop_rec").html(bopopt);
+    }
+    });
 
 $("#unit_dis").val("{{$dispen_unit}}");
-$("#uav_type").val("{{$drone->drone_type}}");
-if($("#district").val("{{$drone->district}}"))
+
+if($("#district").val("{{$drone->district}}").change())
 {
-  var selectedDistrict = "{{$drone->district}}";
-        var psopt="<option value=''>Select PS</option>";
-        if(selectedDistrict !== ''){
-        for(var value of distArr[selectedDistrict]){
-            psopt+="<option value='"+value+"'>"+ value + "</option>";
-        }
-        $("#ps").html(psopt);
-$("#ps").val("{{$drone->ps}}");
+  if($("#ps").val("{{$drone->ps}}").change())
+  {
+    $("#bop_rec").val("{{$drone->bop}}");
+  }
+    
 }
+
+
+var itemArr = {"Fire Arms":["Pistol","Revolver","AK-47 Rifle","Other Rifle","Short Range Cartridges","Long Range Cartridges","Long Range Magazines","Long Range Magazines"],"Explosive (in Kg)":["RDX ","TeTn","Nitroglycrine","Black Powder","Trintro Components"],"Narcotics (in Kg)":["Heroin","Opium","Poppy Husk","Charas","Intoxicant tablets","Tromadol","Morphine","Codeine"],"IEDs":["Detonators","Wire","Timer Switches","IED","Codex pieces"," Electronic Detonators","Steel Containers","Batteries","Tiffin Bomb"],"Communication Devices":["Pakistani Phone"," Pakistani SIM","Satellite Phone","Dongle"],"FICN":[],"Hand grenades":[]
 }
+  var typeopt="<option value=''>Select Type</option>";
+                for(var key in itemArr){
+                  typeopt+= "<option value='"+key+"'>"+ key + "</option>";
+                }
+                $("#cons_type").html(typeopt);
+              //  $('[name="cons_type[]"]').html(typeopt);
+               
+
+ $(document).on('change', 'select[name="cons_type[]"]', function(){
+    var selectedtype = $(this).val();
+      //alert(selectedtype);
+    var item="<option value=''>Select Item</option>";
+        if(selectedtype !== ''){
+          dict_item = itemArr[selectedtype];
+         //console.log(dict_item);
+        for(var value of dict_item){
+            item+="<option value='"+value+"'>"+ value + "</option>";
+          }
+    $(this).closest('.col-md-4').next().find('select[name="cons_item[]"]').html(item);
+  }
 });
+    
+});
+
+
 var road_add = $("#road_add"); //Add button ID
 var x = 1; //initlal text box count
 $(road_add).click(function(e){ //on add input button click

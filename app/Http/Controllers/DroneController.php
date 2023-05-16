@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Auth;
+use Storage;
 use Yajra\Datatables\Datatables;
 
 class DroneController extends Controller
@@ -66,8 +67,11 @@ class DroneController extends Controller
     public function DroneMap()
     {
         $drones = Drone::all();
-
-      return view('drones.drone_map', compact('drones'));
+        $consignments = Consignment::all();
+        $recovery = Recovery::all();
+        $arrest_per = Arrest_Per::all();
+        $ind_susp = Ind_Susp::all();
+      return view('drones.drone_map', compact('drones','consignments','recovery','arrest_per','ind_susp'));
     }
     /**
      * Show the form for creating a new resource.
@@ -77,7 +81,10 @@ class DroneController extends Controller
     public function create()
     {
         //
-        return view('drones.create');
+        $path = storage_path() . "/json/bops.json"; // ie: /var/www/laravel/app/storage/json/filename.json
+
+        $json = file_get_contents($path); 
+        return view('drones.create')->with('Bops',$json);
     }
 
     /**
@@ -109,6 +116,8 @@ class DroneController extends Controller
                 $drone->location = $data['location'];
 				$drone->district = $data['district'];
                 $drone->ps = $data['ps'];
+                $drone->bop = $data['bop_rec'];
+                $drone->vill = $data['vill'];
                 $drone->lat = $data['lat'];
                 $drone->long = $data['long'];
 				$drone->time_seen = date('Y-m-d H:i:s', strtotime($data['time_seen']));
@@ -119,6 +128,11 @@ class DroneController extends Controller
                 }
                 $drone->pen_dist = $data['dist_pen'].$data['unit_dis'];
                 $drone->action = $data['action'];
+                $drone->fir_no=$data['fir_no'];
+                $drone->fir_date=$data['fir_date'];
+                $drone->under_sec=$data['under_sec'];
+                $drone->fir_act=$data['fir_act'];
+                $drone->fir_ps=$data['fir_ps'];
                 $drone->cons_dropped = $data['cons_dropped'];
                 $drone->recovery = $data['rec_radio'];
                 $drone->forensics = $data['forensic_radio'];
@@ -142,6 +156,7 @@ class DroneController extends Controller
                 $reco->max_speed = $data['max_speed'].$data['unit_speed'];
                 $reco->flight_time = $data['flight_time'].$data['unit_ft'];
                 $reco->one_way = $data['onewaydis'].$data['unit_onewaydis'];
+                $reco->drone_id = $drone->id;
                 $reco->save();
             }
                 foreach(array_filter($data['bsf_drone']) as $bsf_dron)
@@ -236,6 +251,53 @@ class DroneController extends Controller
         //
     }
 
+    public function Insert_bop()
+    {
+        $path = storage_path() . "/json/bops.json"; // ie: /var/www/laravel/app/storage/json/filename.json
+
+        $json = file_get_contents($path); 
+        //$data = json_decode(file_get_contents($path), true);
+
+        //collect($data);
+        return view('drones.insert_bop')->with('Bops', $json);
+    }
+
+     public function Submit_bop(Request $request)
+    {
+        $rules = [
+            
+            
+         
+        ];
+        $validator = Validator::make($request->all(),$rules);
+        if ($validator->fails()) {
+            return redirect('/drones/insert_bop')
+            ->withInput()
+            ->withErrors($validator);
+        }
+        else{
+            
+            $data = $request->input();
+            try{
+                //$drone = new Drone();
+                //$drone->drone_type = $data['uav_type'];
+                $district = $data['district'];
+                $ps = $data['ps'];
+                $nbop = $data['nbop'];
+                $path = storage_path() . "/json/bops.json"; 
+                $content = json_decode(file_get_contents($path), true);
+                //$content['district']['ps']= $nbop;
+                //dd($content[$district][$ps]);
+                array_push($content[$district][$ps],$nbop);
+                file_put_contents($path, json_encode($content,true) );
+                return redirect()->back()->with('success', 'Added Successfully');
+                }
+                catch(Exception $e){
+                return redirect()->back()->with('failed',"operation failed");
+            }   
+    }
+}
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -245,14 +307,21 @@ class DroneController extends Controller
     public function edit(Drone $drone)
     {
         //
+        $path = storage_path() . "/json/bops.json"; // ie: /var/www/laravel/app/storage/json/filename.json
+
+        $json = file_get_contents($path); 
+        $consignments = Consignment::where('drone_id',$drone->id )->get();
+        $recovery = Recovery::where('drone_id',$drone->id )->get();
         $bsf_posts = Bsf::where('drone_id',$drone->id )->get();
         $indian_bops = Indian_BOPS::where('drone_id',$drone->id )->get();
         $pak_bops = Pak_BOPS::where('drone_id',$drone->id )->get();
         $indian_vill = Indian_Vill::where('drone_id',$drone->id )->get();
         $pak_vill = Pak_Vill::where('drone_id',$drone->id )->get();
+        $arrest_per = Arrest_Per::where('drone_id',$drone->id )->get();
         $ind_susp = Ind_Susp::where('drone_id',$drone->id )->get();
         $ind_roads = Ind_Roads::where('drone_id',$drone->id )->get();
-        return view('drones.edit',compact('drone','bsf_posts','indian_bops','pak_bops','indian_vill','pak_vill','ind_susp','ind_roads'));
+        $Bops= $json;
+        return view('drones.edit',compact('drone','consignments','recovery','bsf_posts','indian_bops','pak_bops','indian_vill','pak_vill','arrest_per','ind_susp','ind_roads','Bops'));
     }
 
     /**
@@ -281,16 +350,30 @@ class DroneController extends Controller
             $data = $request->input();
 			try{
 				$drone = Drone::find($drone->id);
-                $drone->drone_type = $data['uav_type'];
+                //$drone->drone_type = $data['uav_type'];
                 $drone->location = $data['location'];
 				$drone->district = $data['district'];
                 $drone->ps = $data['ps'];
+                $drone->bop = $data['bop_rec']; 
+                $drone->vill = $data['vill'];
                 $drone->lat = $data['lat'];
                 $drone->long = $data['long'];
 				$drone->time_seen = date('Y-m-d H:i:s', strtotime($data['time_seen']));
                 $drone->fly_dur = $data['hours'].":".$data['minutes'].":".$data['seconds'];
+                   if($drone->fly_dur == "::")  
+                {   
+                    $drone->fly_dur = "";   
+                }
                 $drone->pen_dist = $data['dist_pen'].$data['unit_dis'];
                 $drone->action = $data['action'];
+                $drone->fir_no=$data['fir_no']; 
+                $drone->fir_date=$data['fir_date']; 
+                $drone->under_sec=$data['under_sec'];   
+                $drone->fir_act=$data['fir_act'];   
+                $drone->fir_ps=$data['fir_ps']; 
+                $drone->cons_dropped = $data['cons_dropped'];   
+                $drone->recovery = $data['rec_radio'];  
+                $drone->forensics = $data['forensic_radio'];
                 $drone->updated_at = Carbon::now()->timestamp;
                 $drone->save();
                 //$drone->touch();

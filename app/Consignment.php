@@ -10,6 +10,6 @@ class Consignment extends Model
     public $timestamps = false;
     protected $table = 'consignments';
     protected $fillable = [
-        'type','item','qty'
+        'type','item','qty','drone_id'
     ];
 }

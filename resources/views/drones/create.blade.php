@@ -152,6 +152,42 @@
     <textarea id="textarea" name="action" cols="40" rows="5" class="form-control"></textarea>
   </div> 
 <br>
+<div class="form-row">
+  <div class="form-group col-md-2">
+    <label for="fir_no">FIR No.</label> 
+   <div>
+      <input id="fir_no" name="fir_no" type="text" class="form-control">
+    </div>
+  </div>
+
+  <div class="form-group col-md-2">
+    <label for="fir_date">FIR Date</label> 
+    <div>
+       <input id="fir_date" name="fir_date" type="date" class="form-control">
+    </div>
+  </div>
+
+   <div class="form-group col-md-2">
+    <label for="under_sec">U/S</label> 
+    <div>
+       <input id="under_sec" name="under_sec" type="text" class="form-control">
+    </div>
+  </div>
+
+  <div class="form-group col-md-2">
+    <label for="fir_act">Act</label> 
+    <div>
+       <input id="fir_act" name="fir_act" type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-group col-md-2">
+    <label for="fir_ps">PS</label> 
+    <div>
+       <input id="fir_ps" name="fir_ps" type="text" class="form-control">
+    </div>
+  </div>
+</div>
+<br>
  <div class="form-row">
   <label for="cons_dropped">Consignment Dropped</label>
       <div class="col-md-6">  
@@ -170,6 +206,10 @@
   </div>
 </div>
 <br>
+
+
+  
+  <br>
 <div id="cons_container" style="display:none">
 
   <div class="form-row">
@@ -248,30 +288,6 @@
   </div>
   </div>
 
-
-
-  
-
-<br>
- <div class="form-row">
-  <label for="forensic_radio">Drone Forensics Done</label>
-      <div class="col-md-6">  
- <div class="form-check form-check-inline">
-   <input class="form-check-input" type="radio" name="forensic_radio" value="Yes">
-   <label class="form-check-label">
-   Yes
-   </label>
-</div>
-<div class="form-check form-check-inline">
-   <input class="form-check-input" type="radio" name="forensic_radio" value="No" checked>
-   <label class="form-check-label">
-   No
-   </label>
-</div>
-  </div>
-</div>
-<br>
-<div id="forensic_container" style="display:none">
 <div class="form-row">
   <div class="form-group col-md-3">
     <label for="type_drone">Type of Drone</label> 
@@ -298,7 +314,29 @@
     </div>
   </div>
   </div>
+
+  
+
 <br>
+ <div class="form-row">
+  <label for="forensic_radio">Drone Forensics Done</label>
+      <div class="col-md-6">  
+ <div class="form-check form-check-inline">
+   <input class="form-check-input" type="radio" name="forensic_radio" value="Yes">
+   <label class="form-check-label">
+   Yes
+   </label>
+</div>
+<div class="form-check form-check-inline">
+   <input class="form-check-input" type="radio" name="forensic_radio" value="No" checked>
+   <label class="form-check-label">
+   No
+   </label>
+</div>
+  </div>
+</div>
+<br>
+<div id="forensic_container" style="display:none">
 <div class="form-row">
   <label for="payload">Payload Capacity</label> 
   <div class="col-sm-2">
@@ -638,25 +676,14 @@ jQuery.validator.addMethod("noSpace", function(value, element) {
 $('#form').validate({ // initialize the plugin
 
 rules: {
-    location: {
-        noSpace: true
-    },
+    
     district: {
       required: true
     },
     ps: {
       required: true
     },
-    lat: {
-      noSpace: true
-    },
-    long: {
-      noSpace: true
-    },
     time_seen:{
-      required: true
-    },
-    "bsf_drone[]": {
       required: true
     }
 
@@ -678,14 +705,14 @@ var drone_types = ["Single-Rotor Drones","Multi-Rotor Drones","Fixed-Wing Drones
   drone_opt+= "<option value='"+drone_type+"'>"+ drone_type + "</option>";
  }
  $("#uav_type").html(drone_opt);
- 
- var bopArr={"Tarn Taran":{" Khalra ":["Khalra Barrier","Baba Peer","Dall "," Rajoke "," Karma "," Mangli "," K.S.Wala "," Dharm "," Singh Pura "," Wan Tara Singh "],"Khemkaran ":[" Noorwala "," Kalas "," Rattoke"],"Sarai Amanat Khan":[" Havellian "," Naushera Dhalla "],"Valtoha ":[" Thathi Jaimal Singh "," Kalia "],"Patti Sadar ":[" BOP Kulwant 116 BN. BSF FZR "]},"ASR Rural ":{" Gharinda ":["Mohawa","Rattan Khurd"," Gulgarh "," Pul Moran "," Bharobhal "," Dauke "," Rajatal "," Udhar "," Roranwala "," Kahangarh ","88 Bn. of BSF Amritsar Sector "," Bhanuchak "]," Ramdass ":[" Chhana Pattan "," Panjgraiyan "," Dhramparkash "," Kassowal "," Singhoke "," Chandigarh "," Kotrazda "," Saharan "],"Ajnala":[" Kalam Dogar"," New Sundergarh"," Bhainian "," Dhian Singh Pura "," Old SunderGarh"," Shahpur"], "Lopoke": ["Kakkar Rear "," Ranian "," Gulgarh "," Mullekot "," Raja Mohtam "," Udhar Dhariwal "],"Bhindi Saidan": ["Ghogga "," Burj "," Sherpur "," Gulgarh "]},"Batala":{"Dera baba Nanak":[" DBN Road "," Metla "," Sadanwali "," Abad "," Khassowal Forward "," Boharwadala "]}," Gurdaspur ":{"Dera baba Nanak":[" Chountra "," Aadian "," Thakurpur "],"Kalanaur":[" Rose "," Chandu Wadala "," Kamaljit "," Momenpur "]," Dina Nagar ":[" Chakri "]}," Pathankot":{" Narot Jaimal Singh ":[" Dhinda Forward "," Jaitpur "," Dhinda "," Old Tent Post Bamial "," Paharipur "," Kanshi Barhwan "]}," Ferozepur ":{"Sadar Ferozepur":[" Hussain wala "," H.K Tower "],"Mamdot":[" Mabbo Ke "]," Lakhoke Behram ":[" J.R. Hithar "," Raja Mohatan "," S.S Wala "]," Arifke ":[" Basti Ram Lal "]},"Fazilka":{" Sadar Fazilka ":[" Jhangar "," Lakha Asli "," Khokherin "," Moujam "," GG-2"]," Sadar Jalalabad ":[" Gatti Yaru "," Jodhanwali Bhaini "]}}
+var bops="{{$Bops}}";
+var bopArr=JSON.parse(bops.replace(/&quot;/g,'"'));
   var distArr = {
                     "Amritsar-City" : ["PS Div. A","PS Div. B","PS Div. C","PS Div. D","PS Div. E","PS Civil Lines","PS Sadar","PS Islamabad","PS Chheharta","PS Sultanwind","PS Gate Hakiman","PS Cantonment","PS Maqboolpura","PS Women","PS NRI","PS Airport","PS Verka","PS Majitha Road","PS Mohkampura","PS Ranjit Avenue","PS State Spl. Operation Cell"],
                     "Amritsar-Rural" : ["PS Ajnala","PS Beas","PS Bhindi Saidan","PS Chattiwind","PS Gharinda","PS Jandiala","PS Jhander","PS Kambo","PS Kathunangal","PS Khilchian","PS Lopoke","PS Majitha","PS Mattewal","PS Mehta","PS Rajasansi","PS Ramdas","PS Tarsikka"],
                     "Fazilka" : ["PS Sadar","PS City","PS City Jalalabad","PS Sadar Abohar","PS City-1 Abohar","PS City-2 Abohar","PS Bahav Wala","PS Sadar Jalalabad","PS Arni Wala","PS Khuian Sarwar","PS Khui Khera","PS Vario"],
                     "Ferozepur" : ["PS City","PS Sadar","PS Cantt.","PS Makhu","PS Zira","PS Zira City","PS Mallanwala","PS Kulgari","PS Ghall Khurad","PS Mamdot","PS Guru Har Sahai","PS Lakhoke Behram","PS Amir Khas","PS Women Cell","PS Talwandi Bhai","PS Arif Ke","PS NRI"],
-                    "Gurdaspur": ["PS City","PS Sadar","PS Dhariwal","PS Kahnuwan","PS Purana Shalla","PS Dorangla","PS Dinanagar","PS Kalanaur","PS Tibber","PS Ghuman Kalan","PS Bhaini Mian Khan","PS Behrampur","PS NRI"],
+                    "Gurdaspur": ["PS City","PS Sadar","PS Dhariwal","PS Kahnuwan","PS Purana Shalla","PS Dorangla","PS Dinanagar","PS Kalanaur","PS Tibber","PS Ghuman Kalan","PS Bhaini Mian Khan","PS Behrampur","PS NRI","PS Dorangla"],
                     "Jalandhar-Rural": ["PS Adampur","PS Bhogpur","PS Lambra","PS Kartarpur","PS Maqsudan","PS Nakodar","PS City Nakodar","PS Mehatpur","PS Shahkot","PS Lohian","PS Phillaur","PS Bilga","PS Nurmahal","PS Goraya","PS Patara","PS NRI"],
                     "Kapurthala": ["PS City","PS Kotwali","PS Sadar","PS Sultanpur Lodhi","PS Talwandi Choudhrian","PS Bholath","PS Dhilwan","PS Subhanpur","PS City Phagwara","PS Sadar Phagwara","PS Kabirpur","PS Begowal","PS Rawalpindi","PS Fattudhinga","PS Satnampura","PS NRI"],
                     "Pathankot": ["PS Div.No.1","PS Div.No.2","PS Sadar","PS Shahpur Kandi","PS Sujanpur","PS Nangal Bhoor","PS Taragarh","PS Narot Jaimal Singh","PS Dhar Kalan"],
@@ -727,7 +754,7 @@ var drone_types = ["Single-Rotor Drones","Multi-Rotor Drones","Fixed-Wing Drones
     });
 
 
-    var itemArr = {"Fire Arms":["Pistol","Revolver","AK-47 Rifle","Other Rifle","Short Range Cartridges","Long Range Cartridges","Long Range Magazines","Long Range Magazines"],"Explosive":["RDX ","TeTn","Nitroglycrine","Black Powder","Trintro Components"],"Narcotics":["Heroin","Opium","Poppy Husk","Charas","Intoxicant tablets","Tromadol","Morphine","Codeine"],"IEDs":["Detonators","Wire","Timer Switches","IED","Codex pieces"," Electronic Detonators","Steel Containers","Batteries","Tiffin Bomb"],"Communication Devices":["Pakistani Phone"," Pakistani SIM","Satellite Phone","Dongle"],"FICN":[],"Hand grenades":[]
+    var itemArr = {"Fire Arms":["Pistol","Revolver","AK-47 Rifle","Other Rifle","Short Range Cartridges","Long Range Cartridges","Short Range Magazines","Long Range Magazines"],"Explosive (in Kg)":["RDX ","TeTn","Nitroglycrine","Black Powder","Trintro Components"],"Narcotics (in Kg)":["Heroin","Opium","Poppy Husk","Charas","Intoxicant tablets","Tromadol","Morphine","Codeine"],"IEDs":["Detonators","Wire","Timer Switches","IED","Codex pieces"," Electronic Detonators","Steel Containers","Batteries","Tiffin Bomb","Wooden Frame"],"Communication Devices":["Pakistani Phone"," Pakistani SIM","Satellite Phone","Dongle"],"Indian Currency":[],"FICN":[],"Hand grenades":[]
 }
   var typeopt="<option value=''>Select Type</option>";
                 for(var key in itemArr){

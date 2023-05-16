@@ -10,6 +10,6 @@ class Recovery extends Model
      public $timestamps = false;
     protected $table = 'recovery';
     protected $fillable = [
-        'dor','rec_agency','type_drone','model','payload_cap','max_speed','flight_time'
+        'dor','rec_agency','type_drone','model','payload_cap','max_speed','flight_time','one_way','drone_id'
     ];
 }
